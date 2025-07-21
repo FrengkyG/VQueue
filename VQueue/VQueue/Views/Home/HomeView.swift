@@ -10,43 +10,52 @@ import SwiftUI
 struct HomeView: View {
     @State private var scannedResult: String?
     @State private var isPresentingScanner = false
+    @State private var path: [String] = []
     
     var body: some View {
-        VStack {
-            HStack {
+        NavigationStack(path: $path) {
+            VStack {
+                HStack {
+                    Spacer()
+                    Image("iconBoothLogin")
+                }
+                
                 Spacer()
-                Image("iconBoothLogin")
+                
+                if let result = scannedResult {
+                    Text("QR Result:\n\(result)")
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+                
+                
+                Button(action: {
+                    isPresentingScanner = true
+                }
+                ){
+                    Text("Start Scan")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.redColor)
+                        .cornerRadius(12)
+                }.padding(.horizontal, 20)
             }
-            
-            Spacer()
-            
-            if let result = scannedResult {
-                Text("QR Result:\n\(result)")
-                    .multilineTextAlignment(.center)
-                    .padding()
+            .padding(.horizontal, 36)
+            .padding(.top, 20)
+            .padding(.bottom, 85)
+            .fullScreenCover(isPresented: $isPresentingScanner) {
+                QrScanView { result in
+                    if scannedResult != result {
+                        scannedResult = result
+                        path.append(result)
+                    }
+                    isPresentingScanner = false
+                }
             }
-            
-        
-            Button(action: {
-                isPresentingScanner = true
-            }
-            ){
-                Text("Start Scan")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.redColor)
-                    .cornerRadius(12)
-            }.padding(.horizontal, 20)
-        }
-        .padding(.horizontal, 36)
-        .padding(.top, 20)
-        .padding(.bottom, 85)
-        .fullScreenCover(isPresented: $isPresentingScanner) {
-            QrScanView { result in
-                scannedResult = result
-                isPresentingScanner = false
+            .navigationDestination(for: String.self) { scanned in
+                BoothView()
             }
         }
     }
@@ -55,4 +64,3 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
-
