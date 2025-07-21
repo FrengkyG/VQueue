@@ -74,3 +74,4 @@ DerivedData/
 # Build artifacts
 /build/
 *.xcodeproj/xcuserdata/
+*.xcuserstate
