@@ -138,7 +138,7 @@ struct FlashSaleSegmentedView: View {
 
 
 struct ProductGridView: View {
-    let products = [
+    @State private var products: [Product] = [
         Product(
             brand: "MYKONOS",
             name: "Satin Blanc EDP 100 ml",
@@ -191,8 +191,8 @@ struct ProductGridView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(products, id: \.id) { product in
-                    ProductCardView(product: product)
+                ForEach($products, id: \.id) { $product in
+                    ProductCardView(product: $product)
                 }
             }
             .padding(.horizontal, 16)
@@ -205,9 +205,7 @@ struct ProductCardView: View {
     @State private var showAddToCartSheet = false
     @State private var selectedProduct: Product = Product(brand: "", name: "", price: "", originalPrice: "", imageName: "")
     
-    let product: Product
-    
-
+    @Binding var product: Product
     
     var body: some View {
         VStack(spacing: 8) {
@@ -222,22 +220,27 @@ struct ProductCardView: View {
                         showAddToCartSheet = true
                         selectedProduct = product
                     }) {
-                        Circle()
-                            .fill(Color.redColor ?? Color.red)
-                            .frame(width: 27, height: 27)
-                            .overlay(
-                                Group {
-                                    if product.qty > 0 {
+                        Group {
+                            if product.qty > 0 {
+                                Circle()
+                                    .stroke(Color.redColor ?? Color.red, lineWidth: 1)
+                                    .frame(width: 27, height: 27)
+                                    .overlay(
                                         Text("\(product.qty)")
-                                            .foregroundColor(.white)
-                                            .font(.system(size: 13, weight: .medium))
-                                    } else {
+                                            .foregroundColor(Color.redColor ?? Color.red)
+                                            .font(.system(size: 17, weight: .medium))
+                                    )
+                            } else {
+                                Circle()
+                                    .fill(Color.redColor ?? Color.red)
+                                    .frame(width: 27, height: 27)
+                                    .overlay(
                                         Image(systemName: "plus")
                                             .foregroundColor(.white)
-                                            .font(.system(size: 16, weight: .medium))
-                                    }
-                                }
-                            )
+                                            .font(.system(size: 17, weight: .bold))
+                                    )
+                            }
+                        }
                     }
                     .padding(.trailing, 8)
                     .padding(.bottom, 8)
@@ -273,7 +276,7 @@ struct ProductCardView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .sheet(isPresented: $showAddToCartSheet) {
-                ProductBottomSheetView(isPresented: $showAddToCartSheet, product: $selectedProduct)
+                ProductBottomSheetView(isPresented: $showAddToCartSheet, product: $product)
                     .presentationDetents([.fraction(0.75)])
             }
         }
@@ -334,7 +337,6 @@ struct ProductBottomSheetView: View {
                 }
                 
                 Text("\(quantity)")
-                    .font(.system(size: 17))
                 
                 Button(action: {
                     quantity += 1
@@ -371,5 +373,8 @@ struct ProductBottomSheetView: View {
         .cornerRadius(20)
         .ignoresSafeArea(edges: .bottom)
         .padding(.horizontal, 16)
+        .onAppear {
+            quantity = max(1, product.qty)
+        }
     }
 }
