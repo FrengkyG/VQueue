@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OrderSummaryView: View {
+    @State private var isNavigatingToQueue = false
+    
     let orders = [
         Product(
             brand: "MYKONOS",
@@ -28,57 +30,63 @@ struct OrderSummaryView: View {
     ]
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack(alignment: .leading) {
-                ToolbarOrderView()
-                Divider().background(Color.dividerColor)
-                Text("Order Summary")
-                    .font(.system(size: 17))
-                    .fontWeight(.semibold)
-                    .padding(.top, 20)
-                    .padding(.horizontal, 15)
-                ForEach(orders) { order in
-                    OrderItemView(order: order)
-                }
-                Divider().background(Color.dividerColor)
-                    .padding(.vertical, 24)
-                    .padding(.horizontal, 8)
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Note")
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                VStack(alignment: .leading) {
+                    ToolbarOrderView()
+                    Divider().background(Color.dividerColor)
+                    Text("Order Summary")
                         .font(.system(size: 17))
                         .fontWeight(.semibold)
-                        .foregroundColor(.redColor)
+                        .padding(.top, 20)
+                        .padding(.horizontal, 15)
+                    ForEach(orders) { order in
+                        OrderItemView(order: order)
+                    }
+                    Divider().background(Color.dividerColor)
+                        .padding(.vertical, 24)
+                        .padding(.horizontal, 8)
                     
-                    Text("This is only your order summary. Pay at the cashier after you get your queue number! 💸")
-                        .font(.system(size: 13  ))
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Note")
+                            .font(.system(size: 17))
+                            .fontWeight(.semibold)
+                            .foregroundColor(.redColor)
+                        
+                        Text("This is only your order summary. Pay at the cashier after you get your queue number! 💸")
+                            .font(.system(size: 13  ))
+                        
+                    }
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 20)
                     
+                    Rectangle()
+                        .fill(Color(hex: "#E5E5E9") ?? Color.gray)
+                        .frame(maxHeight: .infinity)
                 }
-                .padding(.horizontal, 15)
-                .padding(.bottom, 20)
+                .background()
                 
-                Rectangle()
-                    .fill(Color(hex: "#E5E5E9") ?? Color.gray)
-                    .frame(maxHeight: .infinity)
+                Button(action: {
+                    isNavigatingToQueue = true
+                }){
+                    Text("Join Queue")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.redColor)
+                        .cornerRadius(12)
+                }
+                .padding(37)
+                .foregroundColor(Color.graysColor)
             }
-            .background()
-            
-            Button(action: {
-            }){
-                Text("Join Queue")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.redColor)
-                    .cornerRadius(12)
-            }
-            .padding(37)
-            .foregroundColor(Color.graysColor)
         }
         .background(Color(hex: "#E5E5E9") ?? Color.gray)
         .ignoresSafeArea(.container, edges: .bottom)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $isNavigatingToQueue) {
+            QueueView()
+        }
     }
 }
 
@@ -93,7 +101,6 @@ struct ToolbarOrderView: View {
                 .foregroundColor(Color.redColor)
                 .fontWeight(.bold)
                 .padding(.horizontal, 12)
-                .padding(.vertical, 10)
             
             Text("Mykonos")
                 .font(.system(size: 17))

@@ -90,11 +90,10 @@ struct BoothInfoView: View {
                     .font(.system(size: 17))
                 
                 HStack(spacing: 4) {
-                    Image(systemName: "location.circle.fill")
+                    Image("iconLocation")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(Color.graysColor ?? Color.gray)
+                        .frame(width: 20, height: 20)
                     
                     Text("Hall Cendrawasih")
                         .font(.system(size: 15))
