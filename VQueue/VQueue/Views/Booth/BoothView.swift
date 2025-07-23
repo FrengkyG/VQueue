@@ -15,6 +15,7 @@ struct BoothView: View {
             VStack {
                 ToolbarSearchView()
                 Divider().background(Color.dividerColor)
+                    .padding(.vertical, 4)
                 BoothInfoView()
                 FlashSaleSegmentedView()
                 ProductGridView()
@@ -45,13 +46,19 @@ struct BoothView: View {
 
 
 struct ToolbarSearchView: View {
+    @Environment(\.dismiss) var dismiss
     @State private var searchText: String = ""
     
     var body: some View {
         HStack(alignment: .center) {
-            Image(systemName: "chevron.left")
-                .foregroundColor(Color.redColor)
-                .fontWeight(.bold)
+            Button(action: {
+                dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.redColor)
+                    .fontWeight(.bold)
+                    .padding(.leading, 12)
+            }
             
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -61,14 +68,14 @@ struct ToolbarSearchView: View {
                     .disableAutocorrection(true)
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 10)
             .background(Color.grayColor)
             .cornerRadius(100)
             .padding(.horizontal, 8)
             
             Image(systemName: "cart.fill")
                 .foregroundColor(Color.redColor)
-        }.padding(8)
+                .padding(.trailing, 12)
+        }
     }
 }
 

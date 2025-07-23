@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var isPresentingScanner = false
     @State private var path: [String] = []
     @State private var isNavigatingToBooth = false
+    @State private var isNavigatingToQueueList = false
     
     var body: some View {
         NavigationStack {
@@ -34,11 +35,28 @@ struct HomeView: View {
                         .padding()
                         .background(Color.redColor)
                         .cornerRadius(12)
-                }.padding(.horizontal, 20)
+                }
+                .padding(.horizontal, 20)
+                
+                Button(action: {
+                    isNavigatingToQueueList = true
+                }) {
+                    Text("Queue List")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.redColor)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.redColor ?? Color.red, lineWidth: 2)
+                        )
+                        .cornerRadius(12)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
             }
             .padding(.horizontal, 36)
-            .padding(.top, 20)
-            .padding(.bottom, 85)
             .fullScreenCover(isPresented: $isPresentingScanner) {
                 QrScanView { result in
                     if scannedResult != result {
@@ -51,6 +69,9 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $isNavigatingToBooth) {
                 BoothView()
+            }
+            .navigationDestination(isPresented: $isNavigatingToQueueList) {
+                QueueListView()
             }
         }
     }

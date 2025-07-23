@@ -35,6 +35,8 @@ struct OrderSummaryView: View {
                 VStack(alignment: .leading) {
                     ToolbarOrderView()
                     Divider().background(Color.dividerColor)
+                        .padding(.vertical, 4)
+                    
                     Text("Order Summary")
                         .font(.system(size: 17))
                         .fontWeight(.semibold)
@@ -95,18 +97,24 @@ struct OrderSummaryView: View {
 }
 
 struct ToolbarOrderView: View {
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
         HStack(alignment: .center) {
-            Image(systemName: "chevron.left")
-                .foregroundColor(Color.redColor)
-                .fontWeight(.bold)
-                .padding(.horizontal, 12)
+            Button(action: {
+                dismiss()
+            }) {
+                Image(systemName: "chevron.left")
+                    .foregroundColor(Color.redColor)
+                    .fontWeight(.bold)
+                    .padding(.horizontal, 12)
+            }
             
             Text("Mykonos")
                 .font(.system(size: 17))
                 .fontWeight(.semibold)
             Spacer()
-        }.padding(8)
+        }
     }
 }
 

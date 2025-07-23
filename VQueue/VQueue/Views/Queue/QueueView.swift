@@ -11,49 +11,51 @@ struct QueueView: View {
     @State private var isShowCancelAlert: Bool = false
     
     var body: some View {
-        VStack{
-            ToolbarQueueView()
-            Divider().background(Color.dividerColor)
-                .padding(.vertical, 4)
-            
-            Text("Your Queue Number")
-                .font(.system(size: 28))
-                .fontWeight(.bold)
-                .padding(.top, 25)
-            
-            QueueNumberView()
-            
-            QueueNoteView()
-            
-            Spacer()
-            
-            
-            Button(action: {
-                isShowCancelAlert.toggle()
-            }) {
-                Text("Cancel Queue")
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color.redColor)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.redColor ?? Color.red, lineWidth: 2)
-                    )
-                    .cornerRadius(12)
-            }.padding(.horizontal, 37)
-        }.alert("Cancel Queue", isPresented: $isShowCancelAlert) {
+        NavigationStack {
+            VStack{
+                ToolbarQueueView()
+                Divider().background(Color.dividerColor)
+                    .padding(.vertical, 4)
+                
+                Text("Your Queue Number")
+                    .font(.system(size: 28))
+                    .fontWeight(.bold)
+                    .padding(.top, 25)
+                
+                QueueNumberView()
+                
+                QueueNoteView()
+                
+                Spacer()
+                
+                Button(action: {
+                    isShowCancelAlert.toggle()
+                }) {
+                    Text("Cancel Queue")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.redColor)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.redColor ?? Color.red, lineWidth: 2)
+                        )
+                        .cornerRadius(12)
+                }.padding(.horizontal, 37)
+            }.alert("Cancel Queue", isPresented: $isShowCancelAlert) {
                 Button("Yes", role: .destructive) {
                     // action will come here
                 }
                 Button("No", role: .cancel) {
                     isShowCancelAlert.toggle()
                 }
-
-        } message: {
-            Text("You’re about to lose your spot. Are you sure you want to cancel?")
+                
+            } message: {
+                Text("You’re about to lose your spot. Are you sure you want to cancel?")
+            }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
@@ -63,23 +65,37 @@ struct QueueView: View {
 
 
 struct ToolbarQueueView: View {
+    @Environment(\.dismiss) var dismiss
+    @State private var isNavigatingToQueueList = false
+
     var body: some View {
-        HStack(alignment: .center) {
-            Image(systemName: "chevron.left")
-                .foregroundColor(Color.redColor)
-                .fontWeight(.bold)
-                .padding(.horizontal, 12)
-            
-            Text("Mykonos")
-                .font(.system(size: 17))
-                .fontWeight(.semibold)
-            
-            Spacer()
-            
-            Image(systemName: "list.bullet.clipboard")
-                .foregroundColor(Color.redColor)
-                .fontWeight(.bold)
-                .padding(.horizontal, 12)
+        NavigationStack {
+            HStack(alignment: .center) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(Color.redColor)
+                        .fontWeight(.bold)
+                        .padding(.horizontal, 12)
+                }
+                
+                Text("Mykonos")
+                    .font(.system(size: 17))
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                Button(action: {
+                    isNavigatingToQueueList = true
+                }) {
+                    Image(systemName: "list.bullet.clipboard")
+                        .foregroundColor(Color.redColor)
+                        .fontWeight(.bold)
+                        .padding(.horizontal, 12)
+                }
+            }
+        }.navigationDestination(isPresented: $isNavigatingToQueueList) {
+            QueueListView()
         }
     }
 }
