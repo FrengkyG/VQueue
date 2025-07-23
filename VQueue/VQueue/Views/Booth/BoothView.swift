@@ -8,27 +8,34 @@
 import SwiftUI
 
 struct BoothView: View {
+    @State private var isNavigatingToOrderSummary = false
+    
     var body: some View {
-        VStack {
-            ToolbarSearchView()
-            Divider().background(Color.dividerColor)
-            BoothInfoView()
-            FlashSaleSegmentedView()
-            ProductGridView()
-            
-            Button(action: {
-            }){
-                Text("Join Queue")
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.redColor)
-                    .cornerRadius(12)
-            }.padding(.horizontal, 37)
+        NavigationStack {
+            VStack {
+                ToolbarSearchView()
+                Divider().background(Color.dividerColor)
+                BoothInfoView()
+                FlashSaleSegmentedView()
+                ProductGridView()
+                
+                Button(action: {
+                    isNavigatingToOrderSummary = true
+                }){
+                    Text("Join Queue")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.redColor)
+                        .cornerRadius(12)
+                }.padding(.horizontal, 37)
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationDestination(isPresented: $isNavigatingToOrderSummary) {
+                OrderSummaryView()
+            }
         }
-        
-        .navigationBarBackButtonHidden(true)
     }
 }
 

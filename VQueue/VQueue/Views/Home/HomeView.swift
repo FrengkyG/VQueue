@@ -11,9 +11,10 @@ struct HomeView: View {
     @State private var scannedResult: String?
     @State private var isPresentingScanner = false
     @State private var path: [String] = []
+    @State private var isNavigatingToBooth = false
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             VStack {
                 HStack {
                     Spacer()
@@ -21,13 +22,6 @@ struct HomeView: View {
                 }
                 
                 Spacer()
-                
-                if let result = scannedResult {
-                    Text("QR Result:\n\(result)")
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-                
                 
                 Button(action: {
                     isPresentingScanner = true
@@ -51,10 +45,11 @@ struct HomeView: View {
                         scannedResult = result
                         path.append(result)
                     }
+                    isNavigatingToBooth = true
                     isPresentingScanner = false
                 }
             }
-            .navigationDestination(for: String.self) { scanned in
+            .navigationDestination(isPresented: $isNavigatingToBooth) {
                 BoothView()
             }
         }
