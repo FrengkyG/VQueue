@@ -92,7 +92,11 @@ struct HomeView: View {
                     }
                 }
                 .navigationDestination(isPresented: $isNavigatingToBooth) {
-                    BoothView()
+                    if let scannedResult = scannedResult {
+                            BoothView(scannedCode: scannedResult)
+                        } else {
+                            Text("No scanned result.")
+                        }
                 }
                 .navigationDestination(isPresented: $isNavigatingToQueueList) {
                     QueueListView()

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct BoothView: View {
+    let scannedCode: String
     @State private var isNavigatingToOrderSummary = false
     
     var body: some View {
@@ -41,7 +42,7 @@ struct BoothView: View {
 }
 
 #Preview {
-    BoothView()
+    BoothView(scannedCode: "ABC123")
 }
 
 
@@ -68,6 +69,7 @@ struct ToolbarSearchView: View {
                     .disableAutocorrection(true)
             }
             .padding(.horizontal, 12)
+            .padding(.vertical, 8)
             .background(Color.grayColor)
             .cornerRadius(100)
             .padding(.horizontal, 8)
