@@ -6,11 +6,47 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5743379D2E31C07A00298D25 /* QinAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 5743378E2E31C07900298D25 /* QinAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5743379B2E31C07A00298D25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 572653612E29F56A005CDAB9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5743378D2E31C07900298D25;
+			remoteInfo = QinAppClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5743379E2E31C07A00298D25 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				5743379D2E31C07A00298D25 /* QinAppClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		572653692E29F56A005CDAB9 /* VQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5743378E2E31C07900298D25 /* QinAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QinAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		574337A22E31C07A00298D25 /* Exceptions for "QinAppClip" folder in "QinAppClip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5743378D2E31C07900298D25 /* QinAppClip */;
+		};
 		57973FA32E2DE4EC006FAF56 /* Exceptions for "VQueue" folder in "VQueue" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -29,10 +65,25 @@
 			path = VQueue;
 			sourceTree = "<group>";
 		};
+		5743378F2E31C07900298D25 /* QinAppClip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				574337A22E31C07A00298D25 /* Exceptions for "QinAppClip" folder in "QinAppClip" target */,
+			);
+			path = QinAppClip;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		572653662E29F56A005CDAB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5743378B2E31C07900298D25 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				5726536B2E29F56A005CDAB9 /* VQueue */,
+				5743378F2E31C07900298D25 /* QinAppClip */,
 				5726536A2E29F56A005CDAB9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				572653692E29F56A005CDAB9 /* VQueue.app */,
+				5743378E2E31C07900298D25 /* QinAppClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,10 +121,12 @@
 				572653652E29F56A005CDAB9 /* Sources */,
 				572653662E29F56A005CDAB9 /* Frameworks */,
 				572653672E29F56A005CDAB9 /* Resources */,
+				5743379E2E31C07A00298D25 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				5743379C2E31C07A00298D25 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				5726536B2E29F56A005CDAB9 /* VQueue */,
@@ -82,6 +137,28 @@
 			productName = VQueue;
 			productReference = 572653692E29F56A005CDAB9 /* VQueue.app */;
 			productType = "com.apple.product-type.application";
+		};
+		5743378D2E31C07900298D25 /* QinAppClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 574337A12E31C07A00298D25 /* Build configuration list for PBXNativeTarget "QinAppClip" */;
+			buildPhases = (
+				5743378A2E31C07900298D25 /* Sources */,
+				5743378B2E31C07900298D25 /* Frameworks */,
+				5743378C2E31C07900298D25 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5743378F2E31C07900298D25 /* QinAppClip */,
+			);
+			name = QinAppClip;
+			packageProductDependencies = (
+			);
+			productName = QinAppClip;
+			productReference = 5743378E2E31C07900298D25 /* QinAppClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 /* End PBXNativeTarget section */
 
@@ -94,6 +171,9 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					572653682E29F56A005CDAB9 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					5743378D2E31C07900298D25 = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
@@ -113,12 +193,20 @@
 			projectRoot = "";
 			targets = (
 				572653682E29F56A005CDAB9 /* VQueue */,
+				5743378D2E31C07900298D25 /* QinAppClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		572653672E29F56A005CDAB9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5743378C2E31C07900298D25 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +223,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5743378A2E31C07900298D25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5743379C2E31C07A00298D25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5743378D2E31C07900298D25 /* QinAppClip */;
+			targetProxy = 5743379B2E31C07A00298D25 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		572653752E29F56B005CDAB9 /* Debug */ = {
@@ -323,6 +426,70 @@
 			};
 			name = Release;
 		};
+		5743379F2E31C07A00298D25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = QinAppClip/QinAppClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"QinAppClip/Preview Content\"";
+				DEVELOPMENT_TEAM = Z6Z9XWD8J5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QinAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VQueue;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fd14.Qin.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		574337A02E31C07A00298D25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = QinAppClip/QinAppClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"QinAppClip/Preview Content\"";
+				DEVELOPMENT_TEAM = Z6Z9XWD8J5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QinAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VQueue;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fd14.Qin.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -340,6 +507,15 @@
 			buildConfigurations = (
 				572653782E29F56B005CDAB9 /* Debug */,
 				572653792E29F56B005CDAB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		574337A12E31C07A00298D25 /* Build configuration list for PBXNativeTarget "QinAppClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5743379F2E31C07A00298D25 /* Debug */,
+				574337A02E31C07A00298D25 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
