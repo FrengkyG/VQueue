@@ -17,7 +17,7 @@ struct BoothView: View {
                 ToolbarSearchView()
                 Divider().background(Color.dividerColor)
                     .padding(.vertical, 4)
-                BoothInfoView()
+                BoothInfoView(boothId: scannedCode)
                 FlashSaleSegmentedView()
                 ProductGridView()
                 
@@ -82,34 +82,81 @@ struct ToolbarSearchView: View {
 }
 
 struct BoothInfoView: View {
+    @StateObject private var viewModel = BoothViewModel()
+    var boothId: String
+    
     var body: some View {
         HStack {
-            Image("sampleBrandLogo")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 56, height: 56)
-                .clipShape(Circle())
-                .overlay(
-                    Circle().stroke(Color.secondaryColor ?? Color.pink, lineWidth: 1)
-                )
-            
-            VStack(alignment: .leading) {
-                Text("Mykonos")
-                    .fontWeight(.semibold)
-                    .font(.system(size: 17))
-                
-                HStack(spacing: 4) {
-                    Image("iconLocation")
+            if viewModel.isFetchBoothLoading {
+                ProgressView("Loading...")
+            } else if let booth = viewModel.booth {
+                if let imageUrl = booth.imgURL, let url = URL(string: imageUrl) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 56, height: 56)
+                            
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 56, height: 56)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.secondaryColor ?? .pink, lineWidth: 1)
+                                )
+                            
+                        case .failure(_):
+                            Image("sampleBrandLogo")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 56, height: 56)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle().stroke(Color.secondaryColor ?? .pink, lineWidth: 1)
+                                )
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                } else {
+                    Image("sampleBrandLogo")
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 20, height: 20)
+                        .frame(width: 56, height: 56)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.secondaryColor ?? .pink, lineWidth: 1)
+                        )                }
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(booth.name)
+                        .fontWeight(.semibold)
+                        .font(.system(size: 17))
                     
-                    Text("Hall Cendrawasih")
-                        .font(.system(size: 15))
-                        .foregroundStyle(Color.graysColor ?? Color.gray)
+                    HStack(spacing: 4) {
+                        Image("iconLocation")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 20, height: 20)
+                        
+                        Text(booth.location ?? "Hall A")
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color.graysColor ?? Color.gray)
+                    }
                 }
+                Spacer()
+            } else if let error = viewModel.errorMessage {
+                Text("Error: \(error)")
+                    .foregroundColor(.red)
+            } else {
+                Text("No booth data.")
             }
-            Spacer()
+        }
+        .onAppear {
+            viewModel.fetchBooth(by: boothId)
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 16)

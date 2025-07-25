@@ -106,9 +106,19 @@ struct HomeView: View {
 
             }
             
+        }.onAppear {
+            saveDeviceIDToUserDefaults()
         }
-        
     }
+    
+    func saveDeviceIDToUserDefaults() {
+            if let deviceID = UIDevice.current.identifierForVendor?.uuidString {
+                UserDefaults.standard.set(deviceID, forKey: "deviceID")
+                print("✅ Device ID saved: \(deviceID)")
+            } else {
+                print("❌ Failed to get device ID")
+            }
+        }
 }
 
 #Preview {
