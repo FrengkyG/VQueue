@@ -18,8 +18,7 @@ struct BoothView: View {
                 Divider().background(Color.dividerColor)
                     .padding(.vertical, 4)
                 BoothInfoView(boothId: scannedCode)
-                FlashSaleSegmentedView()
-                ProductGridView()
+                FlashSaleSegmentedView(boothId: scannedCode)
                 
                 Button(action: {
                     isNavigatingToOrderSummary = true
@@ -42,7 +41,7 @@ struct BoothView: View {
 }
 
 #Preview {
-    BoothView(scannedCode: "ABC123")
+    BoothView(scannedCode: "c55a8f2a-2ee7-478a-b6df-f7d46ce86e9b")
 }
 
 
@@ -164,86 +163,119 @@ struct BoothInfoView: View {
 }
 
 struct FlashSaleSegmentedView: View {
-    @State private var selectedSegment: String = "Flash Sale Now"
-    
-    let segments = ["Flash Sale Now", "15:00 - 16:00", "19:00 - 20:00"]
+    @State private var selectedSegment: String = ""
+    @StateObject private var viewModel = FlashSaleViewModel()
+    var boothId: String
     
     var body: some View {
-        HStack(spacing: 0) {
-            ForEach(segments, id: \.self) { segment in
-                Button(action: {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        selectedSegment = segment
+        VStack {
+            if !viewModel.segments.isEmpty {
+                HStack(spacing: 0) {
+                    ForEach(viewModel.segments, id: \.self) { segment in
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                selectedSegment = segment
+                            }
+                        }) {
+                            Text(segment)
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(selectedSegment == segment ? .white : .black)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
+                                .background(selectedSegment == segment ? Color.redColor : Color.clear)
+                        }.buttonStyle(.plain)
+                        
+                        if segment != viewModel.segments.last {
+                            Capsule()
+                                .fill(Color.dividerColor ?? Color.gray)
+                                .frame(width: 1, height: 20)
+                        }
                     }
-                }) {
-                    Text(segment)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(selectedSegment == segment ? .white : .black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .background(selectedSegment == segment ? Color.redColor : Color.clear)
-                }.buttonStyle(.plain)
+                }
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                .padding(.horizontal, 12)
                 
-                if segment != segments.last {
-                    Capsule()
-                        .fill(Color.dividerColor ?? Color.gray)
-                        .frame(width: 1, height: 20)
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .frame(maxHeight: .infinity)
+                } else {
+                    ProductGridView(products: filteredProducts)
+                        .frame(maxHeight: .infinity)
                 }
             }
+        }.onAppear {
+            viewModel.fetchFlashSales(forBoothId: boothId)
+            print("Selected segment on appear:", selectedSegment)
         }
-        .background(Color.gray.opacity(0.2))
-        .cornerRadius(8)
-        .padding(.horizontal, 12)
+        .onChange(of: viewModel.segments) { segments in
+            if selectedSegment.isEmpty, let first = segments.first {
+                selectedSegment = first
+                print("🎯 Auto-selected first segment:", first)
+            }
+        }
+    }
+    
+    var filteredProducts: [Product] {
+           // Debug: Print semua flash sales yang ada
+           print("\n=== DEBUG FLASH SALES ===")
+           for (index, sale) in viewModel.flashSales.enumerated() {
+               let timeLabel = "\(sale.startTime) - \(sale.endTime)"
+               print("FlashSale \(index): \(timeLabel) -> \(sale.products.count) products")
+           }
+           print("===========================\n")
+           
+           // Pastikan ada data dan segment yang dipilih
+           guard !viewModel.flashSales.isEmpty, !selectedSegment.isEmpty else {
+               print("⚠️ No data or no selected segment")
+               return []
+           }
+           
+           print("🎯 Looking for segment: '\(selectedSegment)'")
+           
+           // Coba pendekatan baru: ambil hanya flash sale pertama untuk setiap time segment
+           let uniqueFlashSales = Dictionary(grouping: viewModel.flashSales) { sale in
+               "\(sale.startTime) - \(sale.endTime)"
+           }.compactMapValues { $0.first }
+           
+           print("🔍 Unique flash sales: \(uniqueFlashSales.keys.sorted())")
+           
+           // Cari flash sale yang match dengan selected segment
+           guard let matchingFlashSale = uniqueFlashSales[selectedSegment] else {
+               print("❌ No flash sale found for segment: '\(selectedSegment)'")
+               return []
+           }
+           
+           print("✅ Found matching flash sale with \(matchingFlashSale.products.count) products")
+           
+           // Convert ke Product array
+           let products = matchingFlashSale.products.map { Product(from: $0) }
+           
+           print("📦 Final products count: \(products.count)")
+           
+           // Debug: Check for duplicate IDs in final products
+           let productIds = products.map { $0.id }
+           let uniqueIds = Set(productIds)
+           if productIds.count != uniqueIds.count {
+               print("⚠️ WARNING: Duplicate product IDs detected!")
+               print("Total products: \(productIds.count), Unique IDs: \(uniqueIds.count)")
+           }
+           
+           return products
+       }
+    
+    // Fungsi helper untuk mengecek apakah flash sale sedang aktif
+    private func isCurrentlyActive(_ flashSale: FlashSale) -> Bool {
+
+        return true
     }
 }
 
 
 struct ProductGridView: View {
-    @State private var products: [Product] = [
-        Product(
-            brand: "MYKONOS",
-            name: "Satin Blanc EDP 100 ml",
-            price: "Rp 298.000",
-            originalPrice: "399.000",
-            imageName: "sampleProduct1"
-        ),
-        Product(
-            brand: "MYKONOS",
-            name: "Moroccan Vanilla EDP 100 ml",
-            price: "Rp 298.000",
-            originalPrice: "399.000",
-            imageName: "sampleProduct2"
-        ),
-        Product(
-            brand: "MYKONOS",
-            name: "Aphrodite EDP 50 ml",
-            price: "Rp 164.000",
-            originalPrice: "229.000",
-            imageName: "sampleProduct3"
-        ),
-        Product(
-            brand: "MYKONOS",
-            name: "Intimate Affair EDP 100 ml",
-            price: "Rp 298.000",
-            originalPrice: "399.000",
-            imageName: "sampleProduct4"
-        ),
-        Product(
-            brand: "MYKONOS",
-            name: "Sparkling Rosé EDP 100 ml",
-            price: "Rp 298.000",
-            originalPrice: "399.000",
-            imageName: "sampleProduct5"
-        ),
-        Product(
-            brand: "MYKONOS",
-            name: "Pink Beach EDP 100 ml",
-            price: "Rp 298.000",
-            originalPrice: "399.000",
-            imageName: "sampleProduct6"
-        )
-    ]
+    let products: [Product]
     
     let columns = [
         GridItem(.flexible(), spacing: 12),
@@ -252,13 +284,28 @@ struct ProductGridView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
-                ForEach($products, id: \.id) { $product in
-                    ProductCardView(product: $product)
+            if products.isEmpty {
+                Text("No products to display")
+                    .foregroundColor(.gray)
+                    .padding()
+            } else {
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(products, id: \.id) { product in
+                        ProductCardView(product: .constant(product))
+                            .onAppear {
+                                print("🎴 Rendering product card: \(product.name)")
+                            }
+                    }
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+        }
+        .onAppear {
+            print("📱 ProductGridView appeared with \(products.count) products")
+        }
+        .onChange(of: products.count) { newCount in
+            //                   print("🔄 ProductGridView products count changed: \(newCount) products")
         }
     }
 }
