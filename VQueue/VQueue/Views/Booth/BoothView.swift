@@ -14,23 +14,11 @@ struct BoothView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                ToolbarSearchView()
+                ToolbarSearchView(isNavigatingToOrderSummary: $isNavigatingToOrderSummary)
                 Divider().background(Color.dividerColor)
                     .padding(.vertical, 4)
                 BoothInfoView(boothId: scannedCode)
-                FlashSaleSegmentedView(boothId: scannedCode)
-                
-                Button(action: {
-                    isNavigatingToOrderSummary = true
-                }){
-                    Text("Join Queue")
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.redColor)
-                        .cornerRadius(12)
-                }.padding(.horizontal, 37)
+                FlashSaleSegmentedView(boothId: scannedCode, isNavigatingToOrderSummary: $isNavigatingToOrderSummary)
             }
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $isNavigatingToOrderSummary) {
@@ -48,7 +36,8 @@ struct BoothView: View {
 struct ToolbarSearchView: View {
     @Environment(\.dismiss) var dismiss
     @State private var searchText: String = ""
-    
+    @Binding var isNavigatingToOrderSummary: Bool
+
     var body: some View {
         HStack(alignment: .center) {
             Button(action: {
@@ -73,9 +62,13 @@ struct ToolbarSearchView: View {
             .cornerRadius(100)
             .padding(.horizontal, 8)
             
-            Image(systemName: "cart.fill")
-                .foregroundColor(Color.redColor)
-                .padding(.trailing, 12)
+            Button(action: {
+                isNavigatingToOrderSummary = true
+            }){
+                Image(systemName: "cart.fill")
+                    .foregroundColor(Color.redColor)
+                    .padding(.trailing, 12)
+            }
         }
     }
 }
@@ -165,7 +158,9 @@ struct BoothInfoView: View {
 struct FlashSaleSegmentedView: View {
     @State private var selectedSegment: String = ""
     @StateObject private var viewModel = FlashSaleViewModel()
+
     var boothId: String
+    @Binding var isNavigatingToOrderSummary: Bool
     
     var body: some View {
         VStack {
@@ -198,13 +193,25 @@ struct FlashSaleSegmentedView: View {
                 .padding(.horizontal, 12)
                 
                 
-                if viewModel.isLoading {
-                    ProgressView()
-                        .frame(maxHeight: .infinity)
-                } else {
-                    ProductGridView(products: filteredProducts)
-                        .frame(maxHeight: .infinity)
-                }
+                
+            }
+            if viewModel.isLoading {
+                ProgressView("Loading...")
+                    .frame(maxHeight: .infinity)
+                Spacer()
+            } else {
+                ProductGridView(products: filteredProducts)
+                Button(action: {
+                    isNavigatingToOrderSummary = true
+                }){
+                    Text("Join Queue")
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.redColor)
+                        .cornerRadius(12)
+                }.padding(.horizontal, 37)
             }
         }.onAppear {
             viewModel.fetchFlashSales(forBoothId: boothId)
