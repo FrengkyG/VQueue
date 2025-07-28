@@ -19,11 +19,17 @@ struct BoothView: View {
                     .padding(.vertical, 4)
                 BoothInfoView(boothId: scannedCode)
                 FlashSaleSegmentedView(boothId: scannedCode, isNavigatingToOrderSummary: $isNavigatingToOrderSummary)
+                NavigationLink(
+                    destination: OrderSummaryView(),
+                    isActive: $isNavigatingToOrderSummary
+                ) {
+                    EmptyView()
+                }
             }
             .navigationBarBackButtonHidden(true)
-            .navigationDestination(isPresented: $isNavigatingToOrderSummary) {
-                OrderSummaryView()
-            }
+            //            .navigationDestination(isPresented: $isNavigatingToOrderSummary) {
+            //                OrderSummaryView()
+            //            }
         }
     }
 }
@@ -37,7 +43,7 @@ struct ToolbarSearchView: View {
     @Environment(\.dismiss) var dismiss
     @State private var searchText: String = ""
     @Binding var isNavigatingToOrderSummary: Bool
-
+    
     var body: some View {
         HStack(alignment: .center) {
             Button(action: {
@@ -158,7 +164,7 @@ struct BoothInfoView: View {
 struct FlashSaleSegmentedView: View {
     @State private var selectedSegment: String = ""
     @StateObject private var viewModel = FlashSaleViewModel()
-
+    
     var boothId: String
     @Binding var isNavigatingToOrderSummary: Bool
     
@@ -226,56 +232,56 @@ struct FlashSaleSegmentedView: View {
     }
     
     var filteredProducts: [Product] {
-           // Debug: Print semua flash sales yang ada
-           print("\n=== DEBUG FLASH SALES ===")
-           for (index, sale) in viewModel.flashSales.enumerated() {
-               let timeLabel = "\(sale.startTime) - \(sale.endTime)"
-               print("FlashSale \(index): \(timeLabel) -> \(sale.products.count) products")
-           }
-           print("===========================\n")
-           
-           // Pastikan ada data dan segment yang dipilih
-           guard !viewModel.flashSales.isEmpty, !selectedSegment.isEmpty else {
-               print("⚠️ No data or no selected segment")
-               return []
-           }
-           
-           print("🎯 Looking for segment: '\(selectedSegment)'")
-           
-           // Coba pendekatan baru: ambil hanya flash sale pertama untuk setiap time segment
-           let uniqueFlashSales = Dictionary(grouping: viewModel.flashSales) { sale in
-               "\(sale.startTime) - \(sale.endTime)"
-           }.compactMapValues { $0.first }
-           
-           print("🔍 Unique flash sales: \(uniqueFlashSales.keys.sorted())")
-           
-           // Cari flash sale yang match dengan selected segment
-           guard let matchingFlashSale = uniqueFlashSales[selectedSegment] else {
-               print("❌ No flash sale found for segment: '\(selectedSegment)'")
-               return []
-           }
-           
-           print("✅ Found matching flash sale with \(matchingFlashSale.products.count) products")
-           
-           // Convert ke Product array
-           let products = matchingFlashSale.products.map { Product(from: $0) }
-           
-           print("📦 Final products count: \(products.count)")
-           
-           // Debug: Check for duplicate IDs in final products
-           let productIds = products.map { $0.id }
-           let uniqueIds = Set(productIds)
-           if productIds.count != uniqueIds.count {
-               print("⚠️ WARNING: Duplicate product IDs detected!")
-               print("Total products: \(productIds.count), Unique IDs: \(uniqueIds.count)")
-           }
-           
-           return products
-       }
+        // Debug: Print semua flash sales yang ada
+        print("\n=== DEBUG FLASH SALES ===")
+        for (index, sale) in viewModel.flashSales.enumerated() {
+            let timeLabel = "\(sale.startTime) - \(sale.endTime)"
+            print("FlashSale \(index): \(timeLabel) -> \(sale.products.count) products")
+        }
+        print("===========================\n")
+        
+        // Pastikan ada data dan segment yang dipilih
+        guard !viewModel.flashSales.isEmpty, !selectedSegment.isEmpty else {
+            print("⚠️ No data or no selected segment")
+            return []
+        }
+        
+        print("🎯 Looking for segment: '\(selectedSegment)'")
+        
+        // Coba pendekatan baru: ambil hanya flash sale pertama untuk setiap time segment
+        let uniqueFlashSales = Dictionary(grouping: viewModel.flashSales) { sale in
+            "\(sale.startTime) - \(sale.endTime)"
+        }.compactMapValues { $0.first }
+        
+        print("🔍 Unique flash sales: \(uniqueFlashSales.keys.sorted())")
+        
+        // Cari flash sale yang match dengan selected segment
+        guard let matchingFlashSale = uniqueFlashSales[selectedSegment] else {
+            print("❌ No flash sale found for segment: '\(selectedSegment)'")
+            return []
+        }
+        
+        print("✅ Found matching flash sale with \(matchingFlashSale.products.count) products")
+        
+        // Convert ke Product array
+        let products = matchingFlashSale.products.map { Product(from: $0) }
+        
+        print("📦 Final products count: \(products.count)")
+        
+        // Debug: Check for duplicate IDs in final products
+        let productIds = products.map { $0.id }
+        let uniqueIds = Set(productIds)
+        if productIds.count != uniqueIds.count {
+            print("⚠️ WARNING: Duplicate product IDs detected!")
+            print("Total products: \(productIds.count), Unique IDs: \(uniqueIds.count)")
+        }
+        
+        return products
+    }
     
     // Fungsi helper untuk mengecek apakah flash sale sedang aktif
     private func isCurrentlyActive(_ flashSale: FlashSale) -> Bool {
-
+        
         return true
     }
 }
